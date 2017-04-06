@@ -1,14 +1,30 @@
 require 'csv'
 
 class SunlightLegislatorsImporter
-  def self.import(filename)
-    csv = CSV.new(File.open(filename), :headers => true)
+  def self.import(file_name)
+    csv = CSV.new(File.open(file_name), :headers => true)
     csv.each do |row|
+      attribute_hash = Hash.new
       row.each do |field, value|
         # TODO: begin
-        raise NotImplementedError, "TODO: figure out what to do with this row and do it!"
-        # TODO: end
+        if field == "title" 
+          field = "type"
+          if value == "Rep"
+            value = "Representative"
+          else 
+            value = "Senator"
+          end
+        elsif field == 'phone'
+          value.gsub!(/\D/,"")
+        elsif (field == "nickname" || field == "district" || field == "congress_office" || field == "bioguide_id" || field == "votesmart_id" || field == "fec_id" || field == "govtrack_id" || field == "crp_id" || field == "congresspedia_url" || field == "youtube_url" || field == "facebook_id" || field == "official_rss" || field == "senate_class")
+          next 
+        end
+
+        attribute_hash[field] = value
       end
+        #raise NotImplementedError, "TODO: figure out what to do with this row and do it!"
+        # TODO: end
+      legislator = Legislator.create!(attribute_hash)
     end
   end
 end
