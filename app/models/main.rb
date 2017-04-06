@@ -53,10 +53,7 @@ end
 
 count_sen_rep
 
-p Legislator.where(in_office:"0").class
 Legislator.where(in_office:"0").destroy_all
-
-
 
 count_sen_rep
 
